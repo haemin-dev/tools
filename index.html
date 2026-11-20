@@ -2,58 +2,434 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>해민로그 웹툴 모음</title>
-<meta name="description" content="생활·돈·일정에 쓰는 작은 웹툴 모음. 2027 연차 꿀조합 계산기, 2027 공휴일 달력, 일본 알바 연봉의 벽 계산기 등 설치 없이 바로 쓰는 도구들입니다.">
-<meta name="theme-color" content="#FBF4DE">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>해민로그 웹툴 모음 | 2027 연차 계산기·공휴일 달력·알바 연봉의 벽</title>
+<meta name="description" content="설치·로그인 없이 바로 쓰는 생활 웹툴 모음. 2027 연차 꿀조합 계산기, 2027 공휴일 달력, 일본 알바 연봉의 벽 계산기를 두 글자만 쳐서 바로 찾아 쓰세요.">
+<meta name="theme-color" content="#FFFDF7">
+<link rel="canonical" href="https://haemin-dev.github.io/tools/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="해민로그 웹툴 모음">
+<meta property="og:title" content="해민로그 웹툴 모음 | 2027 연차 계산기·공휴일 달력·알바 연봉의 벽">
+<meta property="og:description" content="설치·로그인 없이 바로 쓰는 생활 웹툴 모음. 연차·공휴일·알바 계산기를 두 글자 검색으로 찾아 쓰세요.">
+<meta property="og:url" content="https://haemin-dev.github.io/tools/">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+:root{
+  --cream:#FFFDF7;
+  --paper:#FFFFFF;
+  --navy:#23486A;
+  --navy-deep:#183350;
+  --muted:#5A7591;
+  --sky:#A9C6DE;
+  --sky-soft:#EDF5FB;
+  --butter:#F7E39C;
+  --line:#DCE9F3;
+  --radius:20px;
+}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:#FBF4DE;color:#23486A;font-family:"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:16px;line-height:1.6;word-break:keep-all;-webkit-font-smoothing:antialiased}
-::selection{background:#F7E39C}
-.wrap{max-width:720px;margin:0 auto;padding:32px 16px 64px}
-h1{margin:0;font-size:1.75rem;line-height:1.3}
-.lead{margin:8px 0 24px;color:#4F6B85}
-ul{list-style:none;margin:0;padding:0;display:grid;gap:14px}
-a.tool{display:block;padding:20px;background:#fff;border:1.5px dashed #A9C6DE;border-radius:18px;color:inherit;text-decoration:none;box-shadow:0 2px 12px rgba(35,72,106,.06);transition:transform 180ms cubic-bezier(0.23,1,0.32,1),border-color 160ms ease}
-a.tool:active{transform:scale(.99)}
-a.tool:focus-visible{outline:2px solid #23486A;outline-offset:3px}
-a.tool h2{margin:0;font-size:1.1875rem;line-height:1.4}
-a.tool p{margin:6px 0 0;font-size:.9375rem;color:#4F6B85}
-.tag{display:inline-block;margin-top:12px;padding:3px 12px;border-radius:999px;background:#F7E39C;border:1px dashed #23486A;font-size:.8125rem;font-weight:700}
-@media (hover:hover) and (pointer:fine){a.tool:hover{transform:translateY(-2px);border-color:#23486A}}
-@media (prefers-reduced-motion:reduce){a.tool{transition:none}}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--cream);color:var(--navy);
+  font-family:"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  font-size:16px;line-height:1.6;word-break:keep-all;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 12% -4%,rgba(169,198,222,.34),transparent 38%),radial-gradient(circle at 100% 0%,rgba(247,227,156,.30),transparent 34%);
+  background-repeat:no-repeat;
+}
+::selection{background:var(--butter)}
+.wrap{max-width:760px;margin:0 auto;padding:26px 16px calc(56px + env(safe-area-inset-bottom))}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;z-index:99;padding:10px 14px;background:var(--navy);color:#fff;border-radius:10px}
+
+/* header */
+.brand{display:flex;align-items:center;gap:9px;font-size:.8125rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.brand-dot{width:9px;height:9px;border-radius:50%;background:var(--butter);border:1.5px dashed var(--navy);flex:none}
+h1{margin:6px 0 0;font-size:clamp(1.5rem,6.4vw,2rem);line-height:1.28;letter-spacing:-.02em;font-weight:700}
+.lead{margin:8px 0 0;color:var(--muted);font-size:.9375rem}
+
+/* search */
+.search-sticky{position:sticky;top:0;z-index:30;margin:0 -16px;padding:12px 16px 10px;background:rgba(255,253,247,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:box-shadow .18s ease}
+.search-sticky.is-stuck{box-shadow:0 6px 18px -12px rgba(35,72,106,.45);border-bottom:1px dashed var(--line)}
+.search-field{display:flex;align-items:center;gap:10px;background:var(--paper);border:1.5px dashed var(--sky);border-radius:16px;padding:0 12px 0 14px;min-height:54px;box-shadow:0 3px 14px -8px rgba(35,72,106,.35);transition:border-color .16s ease,box-shadow .16s ease}
+.search-field:focus-within{border-color:var(--navy);border-style:solid;box-shadow:0 4px 18px -10px rgba(35,72,106,.55)}
+.search-field svg{flex:none;color:var(--navy);opacity:.75}
+#q{flex:1;min-width:0;border:0;background:transparent;padding:14px 0;font:inherit;font-size:16px;color:var(--navy);outline:none;-webkit-appearance:none;appearance:none}
+#q::placeholder{color:#8AA3BA}
+#q::-webkit-search-decoration,#q::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.clear-btn{flex:none;display:none;align-items:center;justify-content:center;width:34px;height:34px;margin-right:-2px;border:0;border-radius:50%;background:var(--sky-soft);color:var(--navy);cursor:pointer}
+.clear-btn[data-show="1"]{display:inline-flex}
+.clear-btn:active{transform:scale(.94)}
+.search-hint{margin:7px 2px 0;font-size:.75rem;color:#7A93AA;display:flex;justify-content:space-between;gap:10px}
+
+/* categories */
+.cats{display:flex;gap:8px;margin:14px 0 0;padding:2px 0 4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:none;min-height:42px;padding:9px 16px;border:1.5px dashed var(--sky);border-radius:999px;background:var(--paper);color:var(--navy);font:inherit;font-size:.875rem;font-weight:500;cursor:pointer;transition:background .15s ease,color .15s ease,border-color .15s ease}
+.cat b{font-weight:500;opacity:.6;margin-left:4px;font-size:.8125rem}
+.cat[aria-pressed="true"]{background:var(--navy);border:1.5px solid var(--navy);color:#fff}
+.cat[aria-pressed="true"] b{opacity:.75}
+.cat:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+
+/* section titles */
+.sec-title{display:flex;align-items:center;gap:8px;margin:26px 0 12px;font-size:1rem;font-weight:700;letter-spacing:-.01em}
+.sec-title::before{content:"";width:18px;height:2px;background:var(--butter);border-radius:2px}
+.count{font-size:.8125rem;font-weight:500;color:var(--muted);margin-left:auto}
+
+/* featured */
+.featured[hidden]{display:none}
+.feat-grid{display:grid;gap:12px}
+.feat{position:relative;display:flex;flex-direction:column;gap:8px;padding:20px 20px 18px;border:2px dashed var(--sky);border-radius:24px;background:linear-gradient(160deg,#fff 0%,#FBFEFF 58%,#FFFDF7 100%);color:inherit;text-decoration:none;box-shadow:0 10px 26px -20px rgba(35,72,106,.65);transition:transform .18s cubic-bezier(.23,1,.32,1),border-color .16s ease}
+.feat:active{transform:scale(.99)}
+.feat:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+.feat-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.6875rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
+.badge-new{background:var(--butter);color:var(--navy-deep);border:1px dashed var(--navy)}
+.badge-cat{background:var(--sky-soft);color:#3F6285;border:1px solid #D3E3F0}
+.feat h3{margin:2px 0 0;font-size:1.25rem;line-height:1.35;letter-spacing:-.01em}
+.feat p{margin:0;font-size:.9375rem;color:var(--muted)}
+.feat-go{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:.875rem;font-weight:700;color:var(--navy)}
+.feat-go svg{transition:transform .18s ease}
+@media (hover:hover) and (pointer:fine){
+  .feat:hover{transform:translateY(-2px);border-color:var(--navy)}
+  .feat:hover .feat-go svg{transform:translateX(3px)}
+}
+
+/* tool grid */
+#list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+#list:empty{display:none}
+.card{display:flex;flex-direction:column;gap:7px;padding:18px;border:1.5px solid var(--line);border-radius:var(--radius);background:var(--paper);color:inherit;text-decoration:none;box-shadow:0 3px 14px -12px rgba(35,72,106,.55);transition:transform .16s ease,border-color .16s ease}
+.card:active{transform:scale(.995)}
+.card:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+.card-top{display:flex;align-items:flex-start;gap:8px}
+.card-title{flex:1;font-size:1.0625rem;line-height:1.42;font-weight:700;letter-spacing:-.005em}
+.card-desc{font-size:.9063rem;line-height:1.62;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.chips em{font-style:normal;padding:2px 9px;border-radius:999px;background:#FFF8E2;border:1px dashed #E4CE85;color:#7A6330;font-size:.75rem;font-weight:500}
+@media (hover:hover) and (pointer:fine){
+  .card:hover{border-color:var(--sky);transform:translateY(-1px)}
+}
+
+/* empty */
+.empty{padding:26px 20px;border:1.5px dashed var(--sky);border-radius:22px;background:var(--paper);text-align:center}
+.empty[hidden]{display:none}
+.empty strong{display:block;font-size:1rem}
+.empty p{margin:6px 0 0;color:var(--muted);font-size:.9063rem}
+.empty-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.chip-btn{min-height:42px;padding:9px 14px;border:1.5px dashed var(--sky);border-radius:999px;background:#fff;color:var(--navy);font:inherit;font-size:.875rem;font-weight:500;cursor:pointer}
+.chip-btn:active{transform:scale(.97)}
+
+/* footer */
+footer{margin-top:34px;padding-top:18px;border-top:1px dashed var(--sky);font-size:.8125rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+footer a{color:var(--navy);text-underline-offset:3px}
+
+@media (min-width:600px){
+  .wrap{padding-top:40px}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  #list{grid-template-columns:1fr 1fr}
+  .search-sticky{margin:0 -24px;padding:12px 24px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
 </style>
 </head>
 <body>
+<a class="skip" href="#search-sticky">검색창으로 바로 가기</a>
 <main class="wrap">
-  <h1>해민로그 웹툴 모음</h1>
-  <p class="lead">설치 없이 바로 쓰는 작은 도구들이에요.</p>
-  <ul>
-    <li>
-      <a class="tool" href="yeoncha-2027/">
-        <h2>2027 연차 꿀조합 계산기</h2>
-        <p>남은 연차 개수만 넣으면 2027년 공휴일과 주말을 이어 가장 길게 쉬는 날짜를 찾아 드려요. 결과는 인스타 스토리용 이미지로 저장할 수 있어요.</p>
-        <span class="tag">한국어</span>
-      </a>
-    </li>
-    <li>
-      <a class="tool" href="2027-holidays/">
-        <h2>2027 공휴일 달력</h2>
-        <p>2027년 빨간날과 대체공휴일, 3일 이상 연휴 10번을 달력과 표로 정리했어요.</p>
-        <span class="tag">한국어</span>
-      </a>
-    </li>
-    <li>
-      <a class="tool" href="arubaito-kabe/">
-        <h2>일본 알바 연봉의 벽 계산기</h2>
-        <p>시급과 근무시간을 넣으면 130만 · 136만 · 178만 엔의 벽까지 남은 금액과 일할 수 있는 시간을 바로 계산해요.</p>
-        <span class="tag">한국어 · 日本語</span>
-      </a>
-    </li>
-  </ul>
+
+  <header>
+    <p class="brand"><span class="brand-dot" aria-hidden="true"></span>해민로그 웹툴</p>
+    <h1>필요한 계산기, 두 글자면 찾아요</h1>
+    <p class="lead">설치도 로그인도 없이 바로 쓰는 생활 웹툴 모음이에요.</p>
+  </header>
+
+  <div class="search-sticky" id="search-sticky">
+    <form role="search" action="/" onsubmit="return false">
+      <label class="search-field" for="q">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path></svg>
+        <input id="q" name="q" type="search" placeholder="연차, 공휴, 알바, 달력…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-describedby="q-hint">
+        <button class="clear-btn" type="button" id="clear" aria-label="검색어 지우기">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </label>
+      <p class="search-hint"><span id="q-hint">두 글자만 쳐도 바로 걸러져요</span><span id="live" role="status" aria-live="polite"></span></p>
+    </form>
+  </div>
+
+  <nav class="cats" id="cats" aria-label="카테고리"></nav>
+
+  <section class="featured" id="featured" aria-labelledby="featured-title">
+    <h2 class="sec-title" id="featured-title">방금 올라온 툴</h2>
+    <div class="feat-grid" id="feat-grid"></div>
+  </section>
+
+  <section aria-labelledby="all-title">
+    <h2 class="sec-title" id="all-title">전체 툴 <span class="count" id="count"></span></h2>
+    <ul id="list"></ul>
+    <div class="empty" id="empty" hidden>
+      <strong id="empty-title">아직 없는 툴이에요</strong>
+      <p>찾는 툴이 없다면 조금 다르게 쳐 보세요. 새 툴은 계속 추가하고 있어요.</p>
+      <div class="empty-actions" id="empty-actions"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>설치 없이 바로 쓰는 무료 웹툴 · 새 툴은 계속 추가돼요</span>
+    <a href="https://haeminlog.com/" target="_blank" rel="noopener">만든 곳: 해민로그</a>
+  </footer>
 </main>
+
+<noscript>
+  <div class="wrap">
+    <p>검색을 쓰려면 브라우저의 자바스크립트를 켜 주세요. 지금은 아래 링크로 바로 들어갈 수 있어요.</p>
+    <ul>
+      <li><a href="yeoncha-2027/">2027 연차 꿀조합 계산기</a></li>
+      <li><a href="2027-holidays/">2027 공휴일 달력</a></li>
+      <li><a href="arubaito-kabe/">일본 알바 연봉의 벽 계산기</a></li>
+    </ul>
+  </div>
+</noscript>
+
+<script>
+/* ────────────────────────────────────────────────
+   툴 추가하는 법
+   1) CATEGORIES 에 새 카테고리를 넣고 (없는 경우만)
+   2) TOOLS 맨 위에 객체 하나를 추가하면 끝.
+      featured: true → 맨 위 "방금 올라온 툴" 큰 카드로도 나옴
+      isNew: true    → NEW 배지
+   ──────────────────────────────────────────────── */
+const CATEGORIES = [
+  { id: 'all',     label: '전체' },
+  { id: 'holiday', label: '연휴·달력' },
+  { id: 'money',   label: '알바·돈' },
+  // { id: 'life', label: '생활·변환' },  ← 이렇게 한 줄만 추가
+];
+
+const TOOLS = [
+  {
+    id: 'yeoncha-2027',
+    href: 'yeoncha-2027/',
+    title: '2027 연차 꿀조합 계산기',
+    short: '남은 연차만 넣으면 가장 길게 쉬는 날짜를 찾아드려요',
+    desc: '남은 연차 개수만 넣으면 2027년 공휴일과 주말을 이어 가장 길게 쉬는 날짜를 찾아 드려요. 결과는 인스타 스토리용 이미지로 저장할 수 있어요.',
+    tags: ['연차', '연휴', '2027'],
+    keywords: ['연차', '연휴', '휴가', '쉬는날', '쉬는 날', '꿀조합', '황금연휴', '징검다리', '달력', '공휴일', '2027', '스토리', '이미지', '직장인', '회사'],
+    category: 'holiday',
+    isNew: true,
+    featured: true,
+    addedAt: '2026-11-20',
+  },
+  {
+    id: '2027-holidays',
+    href: '2027-holidays/',
+    title: '2027 공휴일 달력',
+    short: '빨간날·대체공휴일·3일 이상 연휴 10번을 한눈에',
+    desc: '2027년 빨간날과 대체공휴일, 3일 이상 연휴 10번을 달력과 표로 정리했어요.',
+    tags: ['공휴일', '달력', '2027'],
+    keywords: ['공휴일', '공휴', '빨간날', '빨간 날', '대체공휴일', '연휴', '달력', '2027', '설날', '추석', '노동절', '제헌절', '어린이날', '쉬는날', '쉬는 날'],
+    category: 'holiday',
+    isNew: true,
+    featured: true,
+    addedAt: '2026-11-20',
+  },
+  {
+    id: 'arubaito-kabe',
+    href: 'arubaito-kabe/',
+    title: '일본 알바 연봉의 벽 계산기',
+    short: '시급 넣으면 130·136·178만 엔의 벽까지 얼마 남았는지 바로',
+    desc: '시급과 근무시간을 넣으면 130만 · 136만 · 178만 엔의 벽까지 남은 금액과 일할 수 있는 시간을 바로 계산해요.',
+    tags: ['알바', '일본', '연봉'],
+    keywords: ['알바', '아르바이트', '연봉', '벽', '130만', '136만', '178만', '103만', '시급', '유학생', '일본', '도쿄', '근무시간', '부양', '扶養', '壁', '時給'],
+    category: 'money',
+    isNew: false,
+    featured: false,
+    addedAt: '2026-11-17',
+  },
+];
+
+/* ── 아래부터는 손댈 필요 없는 동작 코드 ── */
+(function () {
+  const $ = (s, r) => (r || document).querySelector(s);
+  const catById = {};
+  CATEGORIES.forEach(function (c) { catById[c.id] = c; });
+
+  const strip = function (s) {
+    return String(s).toLowerCase().normalize('NFC')
+      .replace(/[\s\u00B7\u30FB.,!?'"“”‘’()\[\]{}\/\\\-_~·]/g, '');
+  };
+  TOOLS.forEach(function (t) {
+    t._cat = (catById[t.category] || {}).label || '';
+    t._hay = strip([t.title, t.desc, t.short, t._cat, (t.tags || []).join(' '), (t.keywords || []).join(' ')].join(' '));
+  });
+
+  const state = { q: '', cat: 'all' };
+  const input = $('#q');
+  const clearBtn = $('#clear');
+  const list = $('#list');
+  const countEl = $('#count');
+  const live = $('#live');
+  const empty = $('#empty');
+  const emptyTitle = $('#empty-title');
+  const emptyActions = $('#empty-actions');
+  const featSection = $('#featured');
+  const featGrid = $('#feat-grid');
+  const catsEl = $('#cats');
+  const sticky = $('#search-sticky');
+
+  const esc = function (s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  };
+  const arrow = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>';
+  const newBadge = '<span class="badge badge-new">NEW</span>';
+
+  function hasQuery() { return state.q.trim().length > 0; }
+  function matches(t) {
+    if (state.cat !== 'all' && t.category !== state.cat) return false;
+    if (!hasQuery()) return true;
+    const tokens = state.q.trim().toLowerCase().split(/\s+/).map(strip).filter(Boolean);
+    if (!tokens.length) return true;
+    return tokens.every(function (k) { return t._hay.indexOf(k) !== -1; });
+  }
+
+  function renderCats() {
+    const counts = {};
+    TOOLS.forEach(function (t) { counts[t.category] = (counts[t.category] || 0) + 1; });
+    catsEl.innerHTML = CATEGORIES.filter(function (c) {
+      return c.id === 'all' || counts[c.id];
+    }).map(function (c) {
+      const n = c.id === 'all' ? TOOLS.length : counts[c.id];
+      const sel = state.cat === c.id;
+      return '<button class="cat" type="button" data-cat="' + c.id + '" aria-pressed="' + sel + '">' +
+        esc(c.label) + '<b>' + n + '</b></button>';
+    }).join('');
+  }
+
+  function renderFeatured() {
+    const show = !hasQuery() && state.cat === 'all';
+    if (!show) { featSection.hidden = true; return; }
+    const picks = TOOLS.filter(function (t) { return t.featured; }).slice(0, 3);
+    featGrid.innerHTML = picks.map(function (t) {
+      return '<a class="feat" href="' + esc(t.href) + '">' +
+        '<div class="feat-top">' + (t.isNew ? newBadge : '') +
+          '<span class="badge badge-cat">' + esc(t._cat) + '</span></div>' +
+        '<h3>' + esc(t.title) + '</h3>' +
+        '<p>' + esc(t.short) + '</p>' +
+        '<span class="feat-go">바로 쓰기 ' + arrow + '</span>' +
+      '</a>';
+    }).join('');
+    featSection.hidden = picks.length === 0;
+  }
+
+  function renderList() {
+    const rows = TOOLS.filter(matches);
+    list.innerHTML = rows.map(function (t) {
+      return '<li><a class="card" href="' + esc(t.href) + '">' +
+        '<span class="card-top"><span class="card-title">' + esc(t.title) + '</span>' + (t.isNew ? newBadge : '') + '</span>' +
+        '<span class="card-desc">' + esc(t.desc) + '</span>' +
+        '<span class="chips">' + (t.tags || []).map(function (x) { return '<em>#' + esc(x) + '</em>'; }).join('') + '</span>' +
+      '</a></li>';
+    }).join('');
+
+    const filtered = hasQuery() || state.cat !== 'all';
+    countEl.textContent = filtered ? TOOLS.length + '개 중 ' + rows.length + '개' : TOOLS.length + '개';
+    live.textContent = filtered ? rows.length + '개 찾았어요' : '';
+
+    empty.hidden = rows.length > 0;
+    if (!rows.length) {
+      const q = state.q.trim();
+      emptyTitle.textContent = q ? '‘' + q + '’에 맞는 툴이 아직 없어요' : '이 카테고리에 툴이 아직 없어요';
+      const chips = q ? ['연차', '공휴일', '알바'] : ['전체 보기'];
+      emptyActions.innerHTML = chips.map(function (k) {
+        return k === '전체 보기'
+          ? '<button class="chip-btn" type="button" data-reset="1">전체 보기</button>'
+          : '<button class="chip-btn" type="button" data-set="' + esc(k) + '">' + esc(k) + '</button>';
+      }).join('');
+    }
+  }
+
+  function render() {
+    renderCats();
+    renderFeatured();
+    renderList();
+    clearBtn.setAttribute('data-show', input.value ? '1' : '0');
+  }
+
+  function setQuery(v) {
+    input.value = v;
+    state.q = v;
+    render();
+  }
+
+  input.addEventListener('input', function () {
+    state.q = input.value;
+    renderList();
+    renderFeatured();
+    clearBtn.setAttribute('data-show', input.value ? '1' : '0');
+  });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { setQuery(''); }
+  });
+  clearBtn.addEventListener('click', function () { setQuery(''); input.focus(); });
+
+  catsEl.addEventListener('click', function (e) {
+    const b = e.target.closest('[data-cat]');
+    if (!b) return;
+    state.cat = b.getAttribute('data-cat');
+    render();
+  });
+
+  emptyActions.addEventListener('click', function (e) {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.hasAttribute('data-reset')) { state.cat = 'all'; setQuery(''); return; }
+    setQuery(b.getAttribute('data-set'));
+    input.focus();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (e.key === '/' && tag !== 'input' && tag !== 'textarea') { e.preventDefault(); input.focus(); }
+  });
+
+  if ('IntersectionObserver' in window) {
+    const sentinel = document.createElement('div');
+    sticky.parentNode.insertBefore(sentinel, sticky);
+    new IntersectionObserver(function (entries) {
+      sticky.classList.toggle('is-stuck', !entries[0].isIntersecting);
+    }, { rootMargin: '-1px 0px 0px 0px' }).observe(sentinel);
+  }
+
+  // 구조화 데이터 (같은 데이터에서 자동 생성)
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: '해민로그 웹툴 모음',
+    url: 'https://haemin-dev.github.io/tools/',
+    description: '설치·로그인 없이 바로 쓰는 생활 웹툴 모음',
+    hasPart: TOOLS.map(function (t) {
+      return {
+        '@type': 'WebApplication',
+        name: t.title,
+        description: t.desc,
+        url: 'https://haemin-dev.github.io/tools/' + t.href,
+        applicationCategory: 'UtilitiesApplication',
+        operatingSystem: 'Any',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+      };
+    }),
+  };
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.textContent = JSON.stringify(ld);
+  document.head.appendChild(s);
+
+  render();
+})();
+</script>
 </body>
 </html>
