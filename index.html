@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>해민로그 웹툴 모음 | 2027 연차 계산기·공휴일 달력·알바 연봉의 벽</title>
-<meta name="description" content="설치·로그인 없이 바로 쓰는 생활 웹툴 모음. 2027 연차 꿀조합 계산기, 2027 공휴일 달력, 일본 알바 연봉의 벽 계산기를 두 글자만 쳐서 바로 찾아 쓰세요.">
+<title>픽툴 | 골라 쓰는 생활 웹툴 – 연차·공휴일·알바 계산기</title>
+<meta name="description" content="픽툴은 설치·로그인 없이 바로 쓰는 생활 웹툴 모음이에요. 2027 연차 꿀조합 계산기, 2027 공휴일 달력, 일본 알바 연봉의 벽 계산기를 두 글자만 쳐서 바로 찾아 쓰세요.">
 <meta name="theme-color" content="#FFFDF7">
 <link rel="canonical" href="https://haemin-dev.github.io/tools/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="해민로그 웹툴 모음">
-<meta property="og:title" content="해민로그 웹툴 모음 | 2027 연차 계산기·공휴일 달력·알바 연봉의 벽">
+<meta property="og:site_name" content="픽툴">
+<meta property="og:title" content="픽툴 | 골라 쓰는 생활 웹툴 – 연차·공휴일·알바 계산기">
 <meta property="og:description" content="설치·로그인 없이 바로 쓰는 생활 웹툴 모음. 연차·공휴일·알바 계산기를 두 글자 검색으로 찾아 쓰세요.">
 <meta property="og:url" content="https://haemin-dev.github.io/tools/">
 <meta property="og:locale" content="ko_KR">
@@ -45,7 +45,8 @@ body::before{content:"";position:absolute;top:0;left:0;right:0;height:min(52vh,4
 .skip:focus{left:8px;top:8px;z-index:99;padding:10px 14px;background:var(--navy);color:#fff;border-radius:10px}
 
 /* header */
-.brand{display:flex;align-items:center;gap:9px;font-size:.8125rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.brand{display:flex;align-items:center;gap:9px;margin:0;font-size:.9375rem;font-weight:700;color:var(--navy);letter-spacing:.01em}
+.brand-sub{margin-left:2px;padding-left:10px;border-left:1px dashed var(--sky);font-size:.75rem;font-weight:500;color:var(--muted);letter-spacing:0}
 .brand-dot{width:9px;height:9px;border-radius:50%;background:var(--butter);border:1.5px dashed var(--navy);flex:none}
 h1{margin:6px 0 0;font-size:clamp(1.5rem,6.4vw,2rem);line-height:1.28;letter-spacing:-.02em;font-weight:700}
 .lead{margin:8px 0 0;color:var(--muted);font-size:.9375rem}
@@ -141,7 +142,7 @@ footer a{color:var(--navy);text-underline-offset:3px}
 <main class="wrap">
 
   <header>
-    <p class="brand"><span class="brand-dot" aria-hidden="true"></span>해민로그 웹툴</p>
+    <p class="brand"><span class="brand-dot" aria-hidden="true"></span>픽툴<span class="brand-sub">골라 쓰는 생활 웹툴</span></p>
     <h1>필요한 계산기, 두 글자면 찾아요</h1>
     <p class="lead">설치도 로그인도 없이 바로 쓰는 생활 웹툴 모음이에요.</p>
   </header>
@@ -408,9 +409,9 @@ const TOOLS = [
   const ld = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: '해민로그 웹툴 모음',
+    name: '픽툴 | 골라 쓰는 생활 웹툴',
     url: 'https://haemin-dev.github.io/tools/',
-    description: '설치·로그인 없이 바로 쓰는 생활 웹툴 모음',
+    description: '픽툴은 설치·로그인 없이 바로 쓰는 생활 웹툴 모음이에요',
     hasPart: TOOLS.map(function (t) {
       return {
         '@type': 'WebApplication',
