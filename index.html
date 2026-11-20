@@ -88,6 +88,7 @@ h1{margin:6px 0 0;font-size:clamp(1.5rem,6.4vw,2rem);line-height:1.28;letter-spa
 .feat-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.6875rem;font-weight:700;letter-spacing:.02em;line-height:1.5}
 .badge-new{background:var(--butter);color:var(--navy-deep);border:1px dashed var(--navy)}
+.badge-no{margin-top:2px;padding:2px 8px;background:#fff;color:var(--navy);border:1px dashed var(--sky);font-variant-numeric:tabular-nums;letter-spacing:.01em}
 .badge-cat{background:var(--sky-soft);color:#3F6285;border:1px solid #D3E3F0}
 .feat h3{margin:2px 0 0;font-size:1.25rem;line-height:1.35;letter-spacing:-.01em}
 .feat p{margin:0;font-size:.9375rem;color:var(--muted)}
@@ -152,12 +153,12 @@ footer a{color:var(--navy);text-underline-offset:3px}
     <form role="search" action="/" onsubmit="return false">
       <div class="search-field">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path></svg>
-        <input id="q" name="q" type="search" placeholder="연차, 공휴, 알바, 달력…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="웹툴 검색" aria-describedby="q-hint">
+        <input id="q" name="q" type="search" placeholder="예: 02, 연차, 공휴, 알바…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="웹툴 검색" aria-describedby="q-hint">
         <button class="clear-btn" type="button" id="clear" aria-label="검색어 지우기">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
         </button>
       </div>
-      <p class="search-hint"><span id="q-hint">두 글자만 쳐도 바로 걸러져요</span><span id="live" role="status" aria-live="polite"></span></p>
+      <p class="search-hint"><span id="q-hint">번호(#02)나 두 글자만 쳐도 바로 걸러져요</span><span id="live" role="status" aria-live="polite"></span></p>
     </form>
   </div>
 
@@ -202,6 +203,7 @@ footer a{color:var(--navy);text-underline-offset:3px}
    2) TOOLS 맨 위에 객체 하나를 추가하면 끝.
       featured: true → 맨 위 "방금 올라온 툴" 큰 카드로도 나옴
       isNew: true    → NEW 배지
+      no: 2          → 카드의 #02 번호 배지, 검색창에 "2"·"02"·"#02"로도 찾힘
    ──────────────────────────────────────────────── */
 const CATEGORIES = [
   { id: 'all',     label: '전체' },
@@ -222,6 +224,7 @@ const TOOLS = [
     category: 'holiday',
     isNew: true,
     featured: true,
+    no: 2,
     addedAt: '2026-11-20',
   },
   {
@@ -235,6 +238,7 @@ const TOOLS = [
     category: 'holiday',
     isNew: true,
     featured: true,
+    no: 3,
     addedAt: '2026-11-20',
   },
   {
@@ -248,6 +252,7 @@ const TOOLS = [
     category: 'money',
     isNew: false,
     featured: false,
+    no: 1,
     addedAt: '2026-11-17',
   },
 ];
@@ -288,11 +293,17 @@ const TOOLS = [
   };
   const arrow = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>';
   const newBadge = '<span class="badge badge-new">NEW</span>';
+  const noBadge = function (t) {
+    if (!t.no) return '';
+    return '<span class="badge badge-no">#' + String(t.no).padStart(2, '0') + '</span>';
+  };
 
   function hasQuery() { return state.q.trim().length > 0; }
   function matches(t) {
     if (state.cat !== 'all' && t.category !== state.cat) return false;
     if (!hasQuery()) return true;
+    const raw = state.q.replace(/[#\s]/g, '');
+    if (/^\d{1,2}$/.test(raw)) return String(t.no) === String(parseInt(raw, 10)); // 번호 검색: 02 · #02 · 2
     const tokens = state.q.trim().toLowerCase().split(/\s+/).map(strip).filter(Boolean);
     if (!tokens.length) return true;
     return tokens.every(function (k) { return t._hay.indexOf(k) !== -1; });
@@ -317,7 +328,7 @@ const TOOLS = [
     const picks = TOOLS.filter(function (t) { return t.featured; }).slice(0, 3);
     featGrid.innerHTML = picks.map(function (t) {
       return '<a class="feat" href="' + esc(t.href) + '">' +
-        '<div class="feat-top">' + (t.isNew ? newBadge : '') +
+        '<div class="feat-top">' + noBadge(t) + (t.isNew ? newBadge : '') +
           '<span class="badge badge-cat">' + esc(t._cat) + '</span></div>' +
         '<h3>' + esc(t.title) + '</h3>' +
         '<p>' + esc(t.short) + '</p>' +
@@ -331,7 +342,7 @@ const TOOLS = [
     const rows = TOOLS.filter(matches);
     list.innerHTML = rows.map(function (t) {
       return '<li><a class="card" href="' + esc(t.href) + '">' +
-        '<span class="card-top"><span class="card-title">' + esc(t.title) + '</span>' + (t.isNew ? newBadge : '') + '</span>' +
+        '<span class="card-top">' + noBadge(t) + '<span class="card-title">' + esc(t.title) + '</span>' + (t.isNew ? newBadge : '') + '</span>' +
         '<span class="card-desc">' + esc(t.desc) + '</span>' +
         '<span class="chips">' + (t.tags || []).map(function (x) { return '<em>#' + esc(x) + '</em>'; }).join('') + '</span>' +
       '</a></li>';
