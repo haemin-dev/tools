@@ -1,5 +1,5 @@
-# 픽툴 | 골라 쓰는 생활 웹툴
+# 픽툴 (옮김)
 
-설치 없이 바로 쓰는 작은 웹툴 모음
+새 주소: https://tools.irukabloom.com/
 
-https://haemin-dev.github.io/tools/
+이 저장소는 옛 주소를 새 주소로 넘겨 주는 페이지만 남아 있어요.
